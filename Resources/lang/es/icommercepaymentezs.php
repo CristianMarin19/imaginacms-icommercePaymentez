@@ -20,8 +20,11 @@ return [
     'form' => [
     ],
     'formFields' => [
+        'server App Code' => 'Server App Code',
+        'server App Key' => 'Server App Key',
         'client App Code' => 'Client App Code',
         'client App Key' => 'Client App Key',
+        'type' => 'Tipo',
     ],
     'messages' => [
     ],

@@ -32,8 +32,11 @@ class IcommercepaymentezDatabaseSeeder extends Seeder
             $options['init'] = "Modules\Icommercepaymentez\Http\Controllers\Api\IcommercePaymentezApiController";
             
             $options['mode'] = "sandbox";
+            $options['serverAppCode'] = null;
+            $options['serverAppKey'] = null;
             $options['clientAppCode'] = null;
             $options['clientAppKey'] = null;
+            $options['type'] = 'checkout';
             $options['minimunAmount'] = 0;
             $options['maximumAmount'] = null;
       

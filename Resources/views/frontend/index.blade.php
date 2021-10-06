@@ -65,7 +65,7 @@
       if(response.transaction){
 
         checkResponse(response.transaction)
-        processResponse(response.transaction)
+        processResponse(response)
 
       }
       
@@ -122,7 +122,7 @@
         headers: {
           'Content-Type': 'application/json;charset=utf-8'
         },
-        body: JSON.stringify({attributes:responsePaymentez})
+        body: JSON.stringify(responsePaymentez)
     });
 
     let result = await responseProcess.json();

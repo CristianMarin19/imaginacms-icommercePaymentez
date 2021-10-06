@@ -17,9 +17,14 @@ php artisan module:seed Icommercepaymentez
 ```
 
 ## Configurations
+    - Server App Code
+    - Server App Key
 	- Client App Code
     - Client App Key
     - Mode
+    - Type
+        - Checkout - In the same page, only cards
+        - Link to pay - Reedirect to Paymentez, required webhook to the response
 
 ## Account
 https://secure.paymentez.com/login

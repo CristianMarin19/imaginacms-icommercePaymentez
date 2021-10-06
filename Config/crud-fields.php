@@ -55,6 +55,24 @@ return [
             'name' => 'init',
             'isFakeField' => true
         ],
+        'serverAppCode' => [
+          'value' => null,
+            'name' => 'serverAppCode',
+            'isFakeField' => true,
+            'type' => 'input',
+            'props' => [
+                'label' => 'icommercepaymentez::icommercepaymentezs.formFields.server App Code'
+            ]
+        ],
+        'serverAppKey' => [
+          'value' => null,
+            'name' => 'serverAppKey',
+            'isFakeField' => true,
+            'type' => 'input',
+            'props' => [
+                'label' => 'icommercepaymentez::icommercepaymentezs.formFields.server App Key'
+            ]
+        ],
         'clientAppCode' => [
           'value' => null,
             'name' => 'clientAppCode',
@@ -88,6 +106,24 @@ return [
               'options' => [
                 ['label' => 'Sandbox','value' => 'sandbox'],
                 ['label' => 'Production','value' => 'production'],
+              ]
+            ]
+        ],
+        'type' => [
+            'value' => 'checkout',
+            'name' => 'type',
+            'isFakeField' => true,
+            'type' => 'select',
+            'props' => [
+              'label' => 'icommercepaymentez::icommercepaymentezs.formFields.type',
+              'useInput' => false,
+              'useChips' => false,
+              'multiple' => false,
+              'hideDropdownIcon' => true,
+              'newValueMode' => 'add-unique',
+              'options' => [
+                ['label' => 'Checkout - (Dentro de la misma pagina - Solo Tarjetas)','value' => 'checkout'],
+                ['label' => 'Link To Redirect (Reedirige a Paymentez - Es necesario configurar un webhook para la respuesta )','value' => 'linkToRedirect'],
               ]
             ]
         ],

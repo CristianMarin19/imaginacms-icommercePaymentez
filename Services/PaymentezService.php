@@ -9,13 +9,12 @@ class PaymentezService
 
 	}
 
-	 /**
+	/**
     * Make configuration to view in JS
     * @param 
     * @return Object Configuration
     */
-
-	 public function makeConfiguration($paymentMethod,$order,$transaction){
+	public function makeConfiguration($paymentMethod,$order,$transaction){
 
 
 	 	$conf['clientAppCode'] = $paymentMethod->options->clientAppCode ?? null;
@@ -26,9 +25,8 @@ class PaymentezService
 	 	if($paymentMethod->options->mode!='sandbox')
 	 		$conf['envMode'] = 'prod';
 
-	 	
-	 	$description = "Orden #{$order->id} - {$order->first_name} {$order->last_name}";
-	 	$conf['description'] = $description;
+
+	 	$conf['description'] = paymentezGetOrderDescription($order);
 	 	$conf['reedirectAfterPayment'] = $order->url;
 
 	 	$conf['order'] = $order;
@@ -36,6 +34,45 @@ class PaymentezService
 	 	return json_decode(json_encode($conf));
                
 	}
+
+    public function makeConfigurationToGenerateLink($paymentMethod,$order){
+        
+
+        $conf['endPoint'] = config('asgard.icommercepaymentez.config.apiUrl.linkToPay.sandbox');
+        if($paymentMethod->options->mode!='sandbox')
+            $conf['endPoint'] = config('asgard.icommercepaymentez.config.apiUrl.linkToPay.production');
+
+        $params = array(
+            "user" => [
+                    "id" => $order->customer_id,
+                    "email"  => $order->email,
+                    "name" => $order->first_name,
+                    "last_name" => $order->last_name
+            ],
+            "order" => [
+                    "dev_reference" => $order->id,
+                    "description" => paymentezGetOrderDescription($order),
+                    "amount" => $order->total,
+                    "order_vat" => 0,
+                    "installments_type"=> -1,
+                    "currency"=> $order->currency_code
+            ],
+            "configuration" => [
+                "partial_payment" => false,
+                "expiration_time"=> 120, //Seg
+                "success_url" => route('icommercepaymentez.confirmation',$order->id),
+                "failure_url" => route('icommercepaymentez.confirmation',$order->id),
+                "pending_url" => route('icommercepaymentez.confirmation',$order->id),
+                "review_url" => route('icommercepaymentez.confirmation',$order->id)
+            ]
+        );
+
+        $conf['params'] = $params;
+
+        return $conf;
+
+
+    }
 
 	/**
      * Get Status to Order
@@ -77,29 +114,38 @@ class PaymentezService
 
             case 3:
                 $statusDetail = "Cod 3 - Approved transaction"; 
+                $newStatus = 13; //processed
             break;
 
             case 9:
                $statusnDetail = "Cod 9 - Denied transaction";
+                $newStatus = 7; //failed
             break;
 
             case 1:
                $statusDetail = "Cod 1 - Reviewed transaction";
+               $newStatus = 11; // Pending
             break;
 
             case 11:
-               $statusDetail = "Cod 11 - Rejected by fraud system transaction";
+                $statusDetail = "Cod 11 - Rejected by fraud system transaction";
+                $newStatus = 7; //failed
             break;
 
             case 12:
-               $statusDetail = "Cod 12 - Card in black list";
+                $statusDetail = "Cod 12 - Card in black list";
+                $newStatus = 7; //failed
             break;
 
         }
+
+        $allNewStatus['order'] = $newStatus;
+        $allNewStatus['detail'] = $newStatus;
         
+        \Log::info('Icommercepaymentez: New Order Status: '.$newStatus);
         \Log::info('Icommercepaymentez: Status Detail: '.$statusDetail);
 
-        return $statusDetail; 
+        return $allNewStatus; 
 
     }
 

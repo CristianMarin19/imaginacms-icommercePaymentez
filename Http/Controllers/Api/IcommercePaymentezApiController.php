@@ -24,6 +24,8 @@ use Modules\Icommerce\Entities\Transaction as TransEnti;
 // Services
 use Modules\Icommercepaymentez\Services\PaymentezService;
 
+use Modules\Icommercepaymentez\Http\Controllers\Api\PaymentezApiController;
+
 class IcommercePaymentezApiController extends BaseApiController
 {
 
@@ -34,6 +36,7 @@ class IcommercePaymentezApiController extends BaseApiController
     private $transactionController;
 
     private $paymentezService;
+    private $paymentezApi;
     
     public function __construct(
         IcommercePaymentezRepository $icommercepaymentez,
@@ -41,7 +44,8 @@ class IcommercePaymentezApiController extends BaseApiController
         OrderApiController $orderController,
         TransactionRepository $transaction,
         TransactionApiController $transactionController,
-        paymentezService $paymentezService
+        PaymentezService $paymentezService,
+        PaymentezApiController $paymentezApi
     ){
         $this->icommercepaymentez = $icommercepaymentez;
 
@@ -50,6 +54,7 @@ class IcommercePaymentezApiController extends BaseApiController
         $this->transaction = $transaction;
         $this->transactionController = $transactionController;
         $this->paymentezService = $paymentezService;
+        $this->paymentezApi = $paymentezApi;
         
     }
 
@@ -119,10 +124,13 @@ class IcommercePaymentezApiController extends BaseApiController
                 ]]))
             );
 
-            // Encri
-            $eUrl = paymentezEncriptUrl($order->id,$transaction->id);
-        
-            $redirectRoute = route('icommercepaymentez',[$eUrl]);
+            if($paymentMethod->options->type=="checkout"){
+                // Encri
+                $eUrl = paymentezEncriptUrl($order->id,$transaction->id);
+                $redirectRoute = route('icommercepaymentez',[$eUrl]);
+            }else{
+                $redirectRoute = $this->paymentezApi->generateLink($paymentMethod,$order); 
+            }
 
             // Response
             $response = [ 'data' => [
@@ -153,7 +161,7 @@ class IcommercePaymentezApiController extends BaseApiController
 
         \Log::info('Icommercepaymentez: Response - INIT - '.time());
        
-        $data = $request['attributes'] ?? [];//Get data
+        $data = $request['transaction'];
 
         $response = ['status'=> 'success'];
        
@@ -171,10 +179,9 @@ class IcommercePaymentezApiController extends BaseApiController
             // Status Order 'pending'
             if($order->status_id==1){
 
-               
-                $newStatusOrder = $this->paymentezService->getStatusOrder($data['status']);
+                \Log::info('Icommercepaymentez: Updating - OrderId: '.$orderId);
 
-                $externalStatus = $this->paymentezService->getStatusDetail($data['status_detail']);
+                $allNewStatus =  $this->paymentezService->getStatusDetail($data['status_detail']);
 
                 $externalCode = $data['id']; //Transaction ID Paymentez
 
@@ -182,8 +189,8 @@ class IcommercePaymentezApiController extends BaseApiController
                 // Update Transaction
                 $transaction = $this->validateResponseApi(
                     $this->transactionController->update($transactionId,new Request([
-                        'status' => $newStatusOrder,
-                        'external_status' => $externalStatus,
+                        'status' =>  $allNewStatus['order'],
+                        'external_status' => $allNewStatus['detail'],
                         'external_code' => $externalCode
                     ]))
                 );
@@ -192,7 +199,7 @@ class IcommercePaymentezApiController extends BaseApiController
                 $orderUP = $this->validateResponseApi(
                     $this->orderController->update($orderId,new Request(
                         ["attributes" =>[
-                            'status_id' => $newStatusOrder
+                            'status_id' => $allNewStatus['order']
                         ]
                     ]))
                 );

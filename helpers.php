@@ -52,3 +52,19 @@ if (!function_exists('paymentezDecriptUrl')) {
 
     }
 }
+
+/**
+* Decript url to get data   
+* @param  $eUrl
+* @return array
+*/
+if (!function_exists('paymentezGetOrderDescription')) {
+
+    function paymentezGetOrderDescription($order){
+
+        $description = "Orden #{$order->id} - {$order->first_name} {$order->last_name}";
+        
+        return  $description;
+
+    }
+}

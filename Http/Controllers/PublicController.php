@@ -84,5 +84,21 @@ class PublicController extends BasePublicController
 
     }
 
+    /**
+     * Confirmation after payment - redirect
+     * @param Requests request
+     * @return route
+     */
+    public function confirmation($orderId){
+
+        $order = $this->order->find($orderId);
+        
+        if($order){
+            return redirect($order->url);
+        }else{
+            return redirect()->route('homepage');
+        }
+    }
+
 
 }
