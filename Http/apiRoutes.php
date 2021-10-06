@@ -9,7 +9,7 @@ $router->group(['prefix' => 'icommercepaymentez/v1'], function (Router $router) 
         'uses' => 'IcommercePaymentezApiController@init',
     ]);
 
-    $router->post('/', [
+    $router->post('/response', [
         'as' => 'icommercepaymentez.api.paymentez.response',
         'uses' => 'IcommercePaymentezApiController@response',
     ]);
