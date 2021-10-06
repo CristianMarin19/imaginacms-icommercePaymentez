@@ -28,3 +28,6 @@ php artisan module:seed Icommercepaymentez
 
 ## Account
 https://secure.paymentez.com/login
+
+## Confirmation URL
+    https://mydomain/api/icommercepaymentez/v1/response

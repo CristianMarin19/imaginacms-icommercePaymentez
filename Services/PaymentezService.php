@@ -149,6 +149,17 @@ class PaymentezService
 
     }
 
+    /**
+     * Generate Stoken
+     * @param 
+     * @return 
+     */
+    public function generateStoken(){
+
+        //MD5 hash of [transaction_id]_[application_code]_[user_id]_[app_key]
+
+    }
+
     
 
 }
