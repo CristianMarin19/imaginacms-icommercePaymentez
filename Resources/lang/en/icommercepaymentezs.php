@@ -24,7 +24,7 @@ return [
         'server App Key' => 'Server App Key',
         'client App Code' => 'Client App Code',
         'client App Key' => 'Client App Key',
-        'type' => 'Type',
+        'type' => 'Implementation Type',
     ],
     'messages' => [
     ],
