@@ -37,10 +37,12 @@ class PaymentezService
 
     public function makeConfigurationToGenerateLink($paymentMethod,$order){
         
+        $config = config('asgard.icommercepaymentez.config');
 
-        $conf['endPoint'] = config('asgard.icommercepaymentez.config.apiUrl.linkToPay.sandbox');
+        $conf['endPoint'] = $config['apiUrl']['linkToPay']['sandbox'];
         if($paymentMethod->options->mode!='sandbox')
-            $conf['endPoint'] = config('asgard.icommercepaymentez.config.apiUrl.linkToPay.production');
+            $conf['endPoint'] = $config['apiUrl']['linkToPay']['production'];
+
 
         $params = array(
             "user" => [
@@ -59,7 +61,8 @@ class PaymentezService
             ],
             "configuration" => [
                 "partial_payment" => false,
-                "expiration_time"=> 120, //Seg
+                "expiration_time"=> $config['linkToPay']['expirationTime'],
+                "allowed_payment_methods" => $paymentMethod->options->allowedPaymentMethods ?? ['All'],
                 "success_url" => route('icommercepaymentez.confirmation',$order->id),
                 "failure_url" => route('icommercepaymentez.confirmation',$order->id),
                 "pending_url" => route('icommercepaymentez.confirmation',$order->id),

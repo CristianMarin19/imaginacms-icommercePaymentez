@@ -94,7 +94,8 @@ class IcommercePaymentezApiController extends BaseApiController
     public function init(Request $request){
       
         try {
-            
+
+            \Log::info('Icommercepaymentez: Init');
             
             $data = $request->all();
            

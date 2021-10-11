@@ -127,6 +127,25 @@ return [
               ]
             ]
         ],
+        'allowedPaymentMethods' => [
+            'value' => [],
+            'name' => 'allowedPaymentMethods',
+            'isFakeField' => true,
+            'type' => 'select',
+            'props' => [
+              'label' => 'icommercepaymentez::icommercepaymentezs.formFields.allowed payment methods',
+              'useChips' => true,
+              'multiple' => true,
+              'options' => [
+                ['label' => 'All','value' => 'All'],
+                ['label' => 'Card','value' => 'Card'],
+                ['label' => 'BankTransfer','value' => 'BankTransfer'],
+                ['label' => 'Cash','value' => 'Cash'],
+                ['label' => 'EWallet','value' => 'EWallet'],
+                ['label' => 'Qr','value' => 'Qr'],
+              ]
+            ]
+        ],
         'minimunAmount' => [
           'value' => null,
           'name' => 'minimunAmount',

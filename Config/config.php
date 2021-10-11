@@ -14,4 +14,11 @@ return [
         ]
     ],
     
+    /*
+    *
+    */
+    'linkToPay' => [
+        'expirationTime' => 120 //Seg
+    ]
+    
 ];

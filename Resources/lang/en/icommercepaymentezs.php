@@ -25,6 +25,7 @@ return [
         'client App Code' => 'Client App Code',
         'client App Key' => 'Client App Key',
         'type' => 'Implementation Type',
+        'allowed payment methods' => 'Allowed payment methods'
     ],
     'messages' => [
     ],
