@@ -109,11 +109,18 @@ class PaymentezService
     /**
      * Get Status Detail
      * @param Paymentez Status Detail
-     * @return Int 
+     * @return String Status Detail, int New Status to Order
      */
 	public function getStatusDetail($cod){
 
+        \Log::info('Icommercepaymentez: Get Status Detail');
+
         switch ($cod) {
+
+            case 0:
+                $statusDetail = "Cod 0 - Waiting for Payment"; 
+                $newStatus = 1; //processing
+            break;
 
             case 3:
                 $statusDetail = "Cod 3 - Approved transaction"; 
@@ -121,7 +128,7 @@ class PaymentezService
             break;
 
             case 9:
-               $statusnDetail = "Cod 9 - Denied transaction";
+               $statusDetail = "Cod 9 - Denied transaction";
                 $newStatus = 7; //failed
             break;
 
@@ -140,6 +147,11 @@ class PaymentezService
                 $newStatus = 7; //failed
             break;
 
+            default:
+                $statusDetail = "Cod x - Not Status definied";
+                $newStatus = 1; //processing
+            break;
+
         }
 
         $allNewStatus['order'] = $newStatus;
@@ -154,13 +166,21 @@ class PaymentezService
 
     /**
      * Generate Stoken
-     * @param 
-     * @return 
+     * @param request transaction
+     * @param request user
+     * @param payment method
+     * @return stoken
      */
-    public function generateStoken(){
+    public function generateStoken($transaction,$user,$paymentMethod){
 
-        //MD5 hash of [transaction_id]_[application_code]_[user_id]_[app_key]
+        \Log::info('Icommercepaymentez: Generate Stoken');
 
+        $str = $transaction['id'].'_'.$transaction['application_code'].'_'.$user['id'].'_'.$paymentMethod->options->serverAppKey;
+        $stoken = md5($str);
+
+        //\Log::info('Icommercepaymentez: Stoken: '.$stoken);
+        return $stoken;
+        
     }
 
     

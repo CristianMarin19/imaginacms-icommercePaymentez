@@ -89,7 +89,9 @@ class PublicController extends BasePublicController
      * @param Requests request
      * @return route
      */
-    public function confirmation($orderId){
+    public function confirmation(Request $request,$orderId){
+
+        //dd($request,$orderId);
 
         $order = $this->order->find($orderId);
         

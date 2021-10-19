@@ -168,20 +168,34 @@ class IcommercePaymentezApiController extends BaseApiController
        
         try {
 
-             // Order Id
+            // Order Id
             $orderId = $data['dev_reference'];
             $order = $this->order->find($orderId);
 
-            \Log::info('Icommercepaymentez: Response - OrderId: '.$orderId);
+            \Log::info('Icommercepaymentez: Order Id: '.$orderId);
             \Log::info('Icommercepaymentez: Order Status Id: '.$order->status_id );
 
             $transactionId = TransEnti::where('order_id',$orderId)->latest()->first()->id;
             
-            // Status Order 'pending'
-            if($order->status_id==1){
+            // Status Order 'processing' or pending
+            if($order->status_id==1 || $order->status_id==11){
 
-                \Log::info('Icommercepaymentez: Updating - OrderId: '.$orderId);
+                 // Payment Method Configuration
+                $paymentMethod = paymentezGetConfiguration();
 
+                // Implementation is not type checkout
+                if($paymentMethod->options->type!="checkout"){
+
+                    // Generate Stoken
+                    $generateStoken = $this->paymentezService->generateStoken($data,$request['user'],$paymentMethod);
+
+                    // Check signature
+                    if($generateStoken != $data['stoken']) {
+                        throw new \Exception('Icommercepaymentez - ERROR INVALID STOKEN', 204);
+                    }
+                }
+                
+                // Get all infor about status    
                 $allNewStatus =  $this->paymentezService->getStatusDetail($data['status_detail']);
 
                 $externalCode = $data['id']; //Transaction ID Paymentez
