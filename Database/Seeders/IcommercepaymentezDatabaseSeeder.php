@@ -37,7 +37,7 @@ class IcommercepaymentezDatabaseSeeder extends Seeder
             $options['clientAppCode'] = null;
             $options['clientAppKey'] = null;
             $options['type'] = 'checkout';
-            $options['allowedPaymentMethods'] = null;
+            $options['allowedPaymentMethods'] = [];
             $options['minimunAmount'] = 0;
             $options['maximumAmount'] = null;
       
