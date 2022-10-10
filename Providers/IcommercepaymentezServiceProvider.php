@@ -42,7 +42,7 @@ class IcommercepaymentezServiceProvider extends ServiceProvider
         $this->publishConfig('icommercepaymentez', 'config');
         $this->publishConfig('icommercepaymentez', 'crud-fields');
 
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        //$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 
     /**
