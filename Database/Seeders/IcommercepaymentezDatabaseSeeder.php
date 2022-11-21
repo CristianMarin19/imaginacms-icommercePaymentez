@@ -18,6 +18,8 @@ class IcommercepaymentezDatabaseSeeder extends Seeder
         
         Model::unguard();
 
+        $this->call(IcommercepaymentezModuleTableSeeder::class);
+        
         if(!is_module_enabled('Icommercepaymentez')){
             $this->command->alert("This module: Icommercepaymentez is DISABLED!! , please enable the module and then run the seed");
             exit();
