@@ -42,6 +42,7 @@ class IcommercepaymentezDatabaseSeeder extends Seeder
             $options['allowedPaymentMethods'] = [];
             $options['minimunAmount'] = 0;
             $options['maximumAmount'] = null;
+            $options['showInCurrencies'] = ["COP"];
       
             $titleTrans = 'icommercepaymentez::icommercepaymentezs.single';
             $descriptionTrans = 'icommercepaymentez::icommercepaymentezs.description';
